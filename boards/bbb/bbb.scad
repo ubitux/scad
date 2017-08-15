@@ -206,7 +206,7 @@ module _rt1() {
 
     color(_c_gold)
         translate([0, 0, rt1_h-head_h])
-        cube([head_l, head_w, head_h]);
+            cube([head_l, head_w, head_h]);
 }
 
 module hole_positions() {
