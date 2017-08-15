@@ -6,7 +6,7 @@ All the things
 ==============
 
 **Note**: I'm in the process of making and upstreaming all kind of other things
-so there current isn't much to see.
+so there currently isn't much to see.
 
 BeagleBone Black case
 ---------------------
