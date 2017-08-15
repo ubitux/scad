@@ -52,7 +52,7 @@ Some configuration you may want to adjust in [bbb-case.scad](printables/bbb-case
   the carrier is set.
 - `case_thickness` could be reasonably changed if needed in order to control
   the overall thickness of the walls.
-- `breath_padding` corresponds the the space padding between parts that are not
+- `breath_padding` corresponds to the space padding between parts that are not
   supposed to be in contact.
 - `contact_padding` is the space padding between parts that are supposed to be
   in contact. It should be set to `0` in theory, but in practice, cheap 3D
