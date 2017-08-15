@@ -2,6 +2,13 @@ This repository contains various personal OpenSCAD creations.
 
 Most of the interesting stuff lies in the [printables](printables) directory.
 
+Building
+========
+
+In order to get the `.stl` files of a given project, enter any directory in
+[printables](printables/) and type `make`. Specifying jobs to `make` with `-jX`
+is supported and recommended.
+
 All the things
 ==============
 
