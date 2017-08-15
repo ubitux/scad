@@ -33,6 +33,9 @@ all: $(ALL_TARGETS)
 
 pics: $(PIECES_PICS)
 
+deploy_pics: $(PIECES_PICS) $(NAME).gif
+	cp $^ ../../img/$(NAME)
+
 $(PALETTE): $(ANIM_PICS)
 	$(FFMPEG) -i $(ANIM_IMG_PATTERN) -vf palettegen -y $@
 
@@ -51,4 +54,4 @@ clean:
 	$(RM) $(PALETTE)
 	$(RM) $(ALL_TARGETS)
 
-.PHONY: all stl pics clean
+.PHONY: all stl pics clean deploy_pics
