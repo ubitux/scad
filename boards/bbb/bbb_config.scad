@@ -12,6 +12,11 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+// There is a mix of american units and sane units in this file due to the
+// dimensions provided in the specifications being incomplete and expressed in
+// inches, and my inability to measure in something else than international
+// units. This in2mm() function allows converting the value I got from the
+// specifications.
 function in2mm(v) = 2.54 * v / 100;
 
 board_dim = [in2mm(3400), in2mm(2150), 1.75];
