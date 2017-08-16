@@ -15,6 +15,40 @@ All the things
 **Note**: I'm in the process of making and upstreaming all kind of other things
 so there currently isn't much to see.
 
+
+[Hexago](printables/hexago/hexago.scad)
+---------------------------------------
+
+![Hexago](img/hexago/hexago-1x1x1.png)
+
+This is a concept block design inspired by LEGO®, but using hexagon as
+primitive. I came up with this while designing a mini rack for my ARM board.
+
+The hole has 2 purposes:
+- reduce cost by saving printing material
+- allow flexibility of the wall to workaround 3D printers inaccuracies
+
+**Note**: I haven't printed this yet, but I'm assuming it will require some
+contact padding adjustment and a good printer.
+
+### Demo
+
+![Hexago demo](img/hexago/hexago.gif)
+
+### Usage
+
+- `hexago_block()` creates an arbitrary block of the specified size.
+- `hexago_pos()` works similarly to `translate()` in order to place the block
+  based on "hexago unit".
+- You may want to tweak `hexago_r` and `hexago_thick` to your needs.
+
+### Examples of Hexago at different sizes
+
+![Hexago 1x1x5](img/hexago/hexago-1x1x5.png)
+![Hexago 3x2x3](img/hexago/hexago-3x2x3.png)
+![Hexago 8x5x1](img/hexago/hexago-8x5x1.png)
+
+
 BeagleBone Black case
 ---------------------
 
