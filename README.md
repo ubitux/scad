@@ -18,6 +18,9 @@ so there currently isn't much to see.
 BeagleBone Black case
 ---------------------
 
+A 3D printable case for the BeagleBone Black ARM board. It exposes every
+device/pin/slot/button interface available.
+
 ### Demo
 
 ![Case demo](img/bbb-case/bbb-case.gif)
