@@ -49,8 +49,8 @@ contact padding adjustment and a good printer.
 ![Hexago 8x5x1](img/hexago/hexago-8x5x1.png)
 
 
-BeagleBone Black case
----------------------
+[BeagleBone Black case](printables/bbb-case/bbb-case.scad)
+----------------------------------------------------------
 
 A 3D printable case for the BeagleBone Black ARM board. It exposes every
 device/pin/slot/button interface available.
