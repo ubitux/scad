@@ -22,7 +22,7 @@ so there currently isn't much to see.
 ![Hexago](img/hexago/hexago-1x1x1.png)
 
 This is a concept block design inspired by LEGO®, but using hexagon as
-primitive. I came up with this while designing a mini rack for my ARM board.
+primitive. I came up with this while designing a mini rack for my ARM boards.
 
 The hole has 2 purposes:
 - reduce cost by saving printing material
