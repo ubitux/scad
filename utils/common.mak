@@ -12,7 +12,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-OPENSCAD ?= openscad --colorscheme="Tomorrow Night" --imgsize=480,320
+OPENSCAD ?= openscad --colorscheme="Tomorrow Night" --imgsize=1920,1280
+DSCALE   ?= scale=iw/4:ih/4:flags=lanczos
 FFMPEG   ?= ffmpeg -v warning
 STEPS    ?= 200
 FPS      ?= 30
@@ -24,6 +25,7 @@ ANIM_PICS := $(addsuffix .png,$(addprefix $(ANIM_PREFIX),$(shell seq -w $(STEPS)
 
 PIECES_PICS := $(addsuffix .png,$(addprefix $(NAME)-,$(PIECES)))
 PIECES_STL  := $(addsuffix .stl,$(addprefix $(NAME)-,$(PIECES)))
+PIECES_LPICS := $(addsuffix .png,$(addprefix large-$(NAME)-,$(PIECES)))
 
 ALL_TARGETS = $(NAME).gif $(PIECES_STL) $(PIECES_PICS)
 
@@ -37,21 +39,24 @@ deploy_pics: $(PIECES_PICS) $(NAME).gif
 	cp $^ ../../img/$(NAME)
 
 $(PALETTE): $(ANIM_PICS)
-	$(FFMPEG) -i $(ANIM_IMG_PATTERN) -vf palettegen -y $@
+	$(FFMPEG) -i $(ANIM_IMG_PATTERN) -vf $(DSCALE),palettegen -y $@
 
 $(NAME).gif: $(ANIM_PICS) $(PALETTE)
-	$(FFMPEG) -framerate $(FPS) -i $(ANIM_IMG_PATTERN) -i $(PALETTE) -lavfi paletteuse -y -frames:v $(STEPS) -loop 0 -final_delay 300 $@
+	$(FFMPEG) -framerate $(FPS) -i $(ANIM_IMG_PATTERN) -i $(PALETTE) -lavfi "$(DSCALE)[x];[x][1:v]paletteuse" -y -frames:v $(STEPS) -loop 0 -final_delay 300 $@
 
 $(ANIM_PREFIX)%.png: NUM = $(shell echo $* | sed 's/^0*//')
 $(ANIM_PREFIX)%.png: $(NAME).scad
 	$(OPENSCAD) $< -D'$$t=$(NUM)/$(STEPS)' -o $@
 
-$(NAME)-%.png $(NAME)-%.stl: $(NAME).scad
+large-$(NAME)-%.png $(NAME)-%.stl: $(NAME).scad
 	$(OPENSCAD) $< -D'mod="$*"' -o $@
+$(NAME)-%.png: large-$(NAME)-%.png
+	$(FFMPEG) -i $< -vf $(DSCALE) -y $@
 
 clean:
 	$(RM) $(ANIM_PICS)
 	$(RM) $(PALETTE)
 	$(RM) $(ALL_TARGETS)
+	$(RM) $(PIECES_LPICS)
 
 .PHONY: all stl pics clean deploy_pics
