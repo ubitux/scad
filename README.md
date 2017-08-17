@@ -15,6 +15,7 @@ Some ARM board models to be used for case designs:
 | ----------------------------------------------- | -------------------------------------------- |
 | [BeagleBone Black](boards/bbb/bbb.scad)         | ![BeagleBone Black](img/bbb/bbb.gif)         |
 | [Cubieboard](boards/cubieboard/cubieboard.scad) | ![Cubieboard](img/cubieboard/cubieboard.gif) |
+| [Hikey (LeMaker)](boards/hikey/hikey.scad)      | ![Hikey](img/hikey/hikey.gif)                |
 
 
 Printables
