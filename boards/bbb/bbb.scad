@@ -84,10 +84,11 @@ module _power() {
                 rotate([0, 90])
                     cylinder(d=6.5, h=l0);
         }
+    }
+    color(_c_metal)
         translate([0, w/2, h0])
             rotate([0, 90])
                 cylinder(d=2, h=l0);
-    }
 }
 
 module _gpio() {
