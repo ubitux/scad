@@ -266,4 +266,6 @@ module beaglebone_black() {
     translate(sdcard_pos)   _sdcard();
 }
 
-beaglebone_black();
+rotate([0, 0, $t*360])
+    translate([-board_dim[0]/2, -board_dim[1]/2])
+        beaglebone_black();
