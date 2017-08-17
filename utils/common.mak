@@ -12,12 +12,13 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-OPENSCAD ?= openscad --colorscheme="Tomorrow Night" --imgsize=1920,1280
+OPENSCAD ?= openscad --colorscheme="Tomorrow Night" --imgsize=1920,1280 $(OPENSCAD_EXTRA_SETTINGS)
 DSCALE   ?= scale=iw/4:ih/4:flags=lanczos
 FFMPEG   ?= ffmpeg -v warning
 STEPS    ?= 200
 FPS      ?= 30
 PALETTE  ?= palette.png
+GIF_FINAL_DELAY ?= 300
 
 ANIM_PREFIX := anim-$(NAME)-
 ANIM_IMG_PATTERN := $(ANIM_PREFIX)%03d.png
@@ -42,7 +43,7 @@ $(PALETTE): $(ANIM_PICS)
 	$(FFMPEG) -i $(ANIM_IMG_PATTERN) -vf $(DSCALE),palettegen -y $@
 
 $(NAME).gif: $(ANIM_PICS) $(PALETTE)
-	$(FFMPEG) -framerate $(FPS) -i $(ANIM_IMG_PATTERN) -i $(PALETTE) -lavfi "$(DSCALE)[x];[x][1:v]paletteuse" -y -frames:v $(STEPS) -loop 0 -final_delay 300 $@
+	$(FFMPEG) -framerate $(FPS) -i $(ANIM_IMG_PATTERN) -i $(PALETTE) -lavfi "$(DSCALE)[x];[x][1:v]paletteuse" -y -frames:v $(STEPS) -loop 0 -final_delay $(GIF_FINAL_DELAY) $@
 
 $(ANIM_PREFIX)%.png: NUM = $(shell echo $* | sed 's/^0*//')
 $(ANIM_PREFIX)%.png: $(NAME).scad
