@@ -2,18 +2,27 @@ This repository contains various personal OpenSCAD creations.
 
 Most of the interesting stuff lies in the [printables](printables) directory.
 
-Building
-========
+**Note**: I'm in the process of making and upstreaming all kind of other things
+so there currently isn't much to see.
+
+
+Boards
+======
+
+Some ARM board models to be use for case designs:
+
+| Board name                                      | Preview                                      |
+| ----------------------------------------------- | -------------------------------------------- |
+| [BeagleBone Black](boards/bbb/bbb.scad)         | ![BeagleBone Black](img/bbb/bbb.gif)         |
+| [Cubieboard](boards/cubieboard/cubieboard.scad) | ![Cubieboard](img/cubieboard/cubieboard.gif) |
+
+
+Printables
+==============
 
 In order to get the `.stl` files of a given project, enter any directory in
 [printables](printables/) and type `make`. Specifying jobs to `make` with `-jX`
 is supported and recommended.
-
-All the things
-==============
-
-**Note**: I'm in the process of making and upstreaming all kind of other things
-so there currently isn't much to see.
 
 
 [Hexago](printables/hexago/hexago.scad)
