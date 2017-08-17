@@ -9,7 +9,7 @@ so there currently isn't much to see.
 Boards
 ======
 
-Some ARM board models to be use for case designs:
+Some ARM board models to be used for case designs:
 
 | Board name                                      | Preview                                      |
 | ----------------------------------------------- | -------------------------------------------- |
