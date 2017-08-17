@@ -57,7 +57,7 @@ ir_pos = [13.5, 57, board_dim[2]];
 serial_dim = [2.5, 10.25, 8.5];
 serial_pos = [44.5, 17, board_dim[2]];
 
-hdmi_dim = [11.24, 15, 6];
+hdmi_dim = [11.25, 15, 6];
 hdmi_pos = [-.5, 20, board_dim[2]];
 
 sdslot_dim = [15, 14.75, 2];
