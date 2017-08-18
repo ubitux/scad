@@ -334,9 +334,9 @@ module _test_orient(dim, flipped, pad=20) {
     translate([0, 0, 3*pad]) _set_orient(dim, "N", flipped) children();
 }
 
-_test_orient(_default_ethernet_dim, flipped=false)
-    ethernet();
-    //usb();
-    //hdmi();
-    //microusb();
-    //jack();
+_test_orient(_default_ethernet_dim, flipped=false)    ethernet();
+//_test_orient(_default_usb_dim,      flipped=false)    usb();
+//_test_orient(_default_usbx2_dim,    flipped=false)    usbx2();
+//_test_orient(_default_hdmi_dim,     flipped=false)    hdmi();
+//_test_orient(_default_microusb_dim, flipped=false)    microusb();
+//_test_orient(_default_jack_dim,     flipped=false)    jack();
