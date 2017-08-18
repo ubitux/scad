@@ -52,10 +52,15 @@ module _set_orient(dim, direction, flipped) {
             children();
 }
 
-module _ethernet(dim) {
+module _ethernet(dim, swap_led) {
     l = dim[0];
     w = dim[1];
     h = dim[2];
+
+    c_green  = [.3, .9, .3];
+    c_yellow = [.9, .9, .3];
+    c1 = swap_led ? c_yellow : c_green;
+    c2 = swap_led ? c_green  : c_yellow;
 
     difference() {
         color(_c_metal)
@@ -70,11 +75,11 @@ module _ethernet(dim) {
             translate([0, y, 0.5])
                 cube([l-1, 2, 3]);
 
-    color([.3, .9, .3])
+    color(c1)
         translate([-_delta, w-4+_delta, .5])
             cube([1, 2.5, 2]);
 
-    color([.9, .9, .3])
+    color(c2)
         translate([-_delta, 1.5-_delta, .5])
             cube([1, 2.5, 2]);
 }
@@ -189,6 +194,7 @@ _default_usbx2_dim    = [17.5, 14.5, 16];
 _default_hdmi_dim     = [11.5, 15, 6];
 _default_microusb_dim = [6, 8, 3];
 _default_jack_dim     = [12+2, 6.5, 5];
+_default_serialcon_dim= [2.5, 22, 5.5];
 
 module _hdmi(dim) {
     l = dim[0];
@@ -261,9 +267,35 @@ module _jack(dim) {
     }
 }
 
-module ethernet(dim=_default_ethernet_dim, direction="W", flipped=false) {
+module _serialcon(dim) {
+    l = dim[0];
+    w = dim[1];
+    h = dim[2];
+    color([.9,.85,.75]) {
+        translate([0, 1])
+            cube([.5+_delta, w-2, h-1.5]);
+        translate([l-.5, 1])
+            cube([.5, w-2, h-1.5]);
+        translate([_delta, 3, h-1.5])
+            cube([0.5, w-3*2, 1.5-_delta]);
+    }
+    color(_c_black) {
+        difference() {
+            union() {
+                translate([.5, 0.5, 0])
+                    cube([l-1, w-1, h-1.5+_delta]);
+                translate([0, 0, h-1.5])
+                    cube([l, w, 1.5]);
+            }
+            translate([-_delta, 3, _delta])
+                cube([l-1+_delta, w-3*2, h]);
+        }
+    }
+}
+
+module ethernet(dim=_default_ethernet_dim, swap_led=false, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
-        _ethernet(dim);
+        _ethernet(dim, swap_led);
 }
 
 module usb(dim=_default_usb_dim, direction="W", flipped=false) {
@@ -289,6 +321,11 @@ module microusb(dim=_default_microusb_dim, direction="W", flipped=false) {
 module jack(dim=_default_jack_dim, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
         _jack(dim);
+}
+
+module serialcon(dim=_default_serialcon_dim, direction="W", flipped=false) {
+    _set_orient(dim, direction, flipped)
+        _serialcon(dim);
 }
 
 function _dim254(dim, n, m) = [
@@ -340,3 +377,4 @@ _test_orient(_default_ethernet_dim, flipped=false)    ethernet();
 //_test_orient(_default_hdmi_dim,     flipped=false)    hdmi();
 //_test_orient(_default_microusb_dim, flipped=false)    microusb();
 //_test_orient(_default_jack_dim,     flipped=false)    jack();
+//_test_orient(_default_serialcon_dim,flipped=false)    serialcon();
