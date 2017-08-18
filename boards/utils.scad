@@ -16,7 +16,17 @@ _delta = 0.005;
 _c_metal = [.7, .7, .7];
 _c_black = [.3, .3, .3];
 
-module _set_orient(dim, direction="W") {
+module _set_flipped(dim, flipped) {
+    if (flipped) {
+        translate([0, dim[1], dim[2]])
+            rotate([180, 0, 0])
+                children();
+    } else {
+        children();
+    }
+}
+
+module _set_direction(dim, direction) {
     if (direction == "N")
         translate([0, dim[0], 0])
             rotate([0, 0, -90])
@@ -31,6 +41,13 @@ module _set_orient(dim, direction="W") {
                 children();
     else if (direction == "W")
         children();
+}
+
+module _set_orient(dim, direction, flipped) {
+    //%cube(dim);
+    _set_direction(dim, direction)
+        _set_flipped(dim, flipped)
+            children();
 }
 
 module _ethernet(dim) {
@@ -60,7 +77,20 @@ module _ethernet(dim) {
             cube([1, 2.5, 2]);
 }
 
-module ethernet(dim=[21, 16, 13.5], orient="W") {
-    _set_orient(dim, orient)
+
+_default_ethernet_dim = [21, 16, 13.5];
+
+module ethernet(dim=_default_ethernet_dim, orient="W", flipped=false) {
+    _set_orient(dim, orient, flipped)
         _ethernet(dim);
 }
+
+module _test_orient(dim, flipped) {
+    translate([0, 0,  0]) _set_orient(dim, "W", flipped) children();
+    translate([0, 0, 20]) _set_orient(dim, "N", flipped) children();
+    translate([0, 0, 40]) _set_orient(dim, "S", flipped) children();
+    translate([0, 0, 60]) _set_orient(dim, "E", flipped) children();
+}
+
+_test_orient(_default_ethernet_dim, flipped=false)
+    ethernet();
