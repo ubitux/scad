@@ -248,31 +248,6 @@ module _ir() {
                     square(.5);
 }
 
-module _hdmi() {
-    l = hdmi_dim[0];
-    w = hdmi_dim[1];
-    h = hdmi_dim[2];
-    lowest = h - 5.25;
-    hdmi_polygon_pos = [[0, h], [w, h], [w, h-3.25],
-                        [w-2, lowest], [2, lowest], [0, h-3.25]];
-    color(_c_metal) {
-        translate([7, 0, 0])
-            cube([l-7, w, h]);
-        rotate([90, 0, 90]) {
-            linear_extrude(height=7) {
-                difference() {
-                    polygon(hdmi_polygon_pos);
-                    offset(r=-.5)
-                        polygon(hdmi_polygon_pos);
-                }
-            }
-        }
-    }
-    color(_c_black)
-        translate([2, 2, 3])
-            cube([7, w-2*2, 1]);
-}
-
 module _sdslot() {
     color(_c_metal)
         cube(sdslot_dim);
@@ -357,7 +332,7 @@ module cubieboard() {
     translate(powerbtn_pos)     _powerbtn();
     translate(ir_pos)           _ir();
     translate(serial_pos)       pin_header_pitch254(4, 1, dim=serial_dim, direction="N");
-    translate(hdmi_pos)         _hdmi();
+    translate(hdmi_pos)         hdmi(hdmi_dim);
     translate(sdslot_pos)       _sdslot();
     translate(sdcard_pos)       _sdcard();
     translate(cpu_pos)          _cpu();

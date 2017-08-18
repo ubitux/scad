@@ -169,6 +169,32 @@ module _pin_header(dim, n, m, pins_sz, pins_dist) {
 
 _default_ethernet_dim = [21, 16, 13.5];
 _default_usb_dim      = [14, 14.5, 8];
+_default_hdmi_dim     = [11.5, 15, 6];
+
+module _hdmi(dim) {
+    l = dim[0];
+    w = dim[1];
+    h = dim[2];
+    lowest = h - 5.25;
+    hdmi_polygon_pos = [[0, h], [w, h], [w, h-3.25],
+                        [w-2, lowest], [2, lowest], [0, h-3.25]];
+    color(_c_metal) {
+        translate([7, 0, 0])
+            cube([l-7, w, h]);
+        rotate([90, 0, 90]) {
+            linear_extrude(height=7) {
+                difference() {
+                    polygon(hdmi_polygon_pos);
+                    offset(r=-.5)
+                        polygon(hdmi_polygon_pos);
+                }
+            }
+        }
+    }
+    color(_c_black)
+        translate([2, 2, 3])
+            cube([7, w-2*2, 1]);
+}
 
 module ethernet(dim=_default_ethernet_dim, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
@@ -178,6 +204,11 @@ module ethernet(dim=_default_ethernet_dim, direction="W", flipped=false) {
 module usb(dim=_default_usb_dim, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
         _usb(dim);
+}
+
+module hdmi(dim=_default_hdmi_dim, direction="W", flipped=false) {
+    _set_orient(dim, direction, flipped)
+        _hdmi(dim);
 }
 
 function _dim254(dim, n, m) = [

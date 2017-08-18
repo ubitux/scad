@@ -69,32 +69,6 @@ module _sdcard() {
         cube(sdcard_dim);
 }
 
-module _hdmi() {
-    l = hdmi_dim[0];
-    w = hdmi_dim[1];
-    h = hdmi_dim[2];
-    lowest = h - 5.25;
-    hdmi_polygon_pos = [[0, h], [l, h], [l, h-3.25],
-                        [l-2, lowest], [2, lowest], [0, h-3.25]];
-    translate([0, 7, 0]) {
-        color(_c_metal) {
-            cube([l, w-7, h]);
-            rotate([90, 0, 0]) {
-                linear_extrude(height=7) {
-                    difference() {
-                        polygon(hdmi_polygon_pos);
-                        offset(r=-.5)
-                            polygon(hdmi_polygon_pos);
-                    }
-                }
-            }
-        }
-    }
-    color(_c_black)
-        translate([2, 2, 3])
-            cube([l-2*2, 7, 1]);
-}
-
 module _microusb() {
     l = microusb_dim[0];
     w = microusb_dim[1];
@@ -204,7 +178,7 @@ module hikey() {
 
     translate(sdslot_pos)       _sdslot();
     translate(sdcard_pos)       _sdcard();
-    translate(hdmi_pos)         _hdmi();
+    translate(hdmi_pos)         hdmi(hdmi_dim, direction="S");
     translate(microusb_pos)     _microusb();
     usb_pos()                   usb(usb_dim, direction="S");
     translate(extio_pos)        _extio();
