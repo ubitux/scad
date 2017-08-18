@@ -123,9 +123,9 @@ module usb(dim=_default_usb_dim, direction="W", flipped=false) {
 
 module _test_orient(dim, flipped) {
     translate([0, 0,  0]) _set_orient(dim, "W", flipped) children();
-    translate([0, 0, 20]) _set_orient(dim, "N", flipped) children();
-    translate([0, 0, 40]) _set_orient(dim, "S", flipped) children();
-    translate([0, 0, 60]) _set_orient(dim, "E", flipped) children();
+    translate([0, 0, 20]) _set_orient(dim, "S", flipped) children();
+    translate([0, 0, 40]) _set_orient(dim, "E", flipped) children();
+    translate([0, 0, 60]) _set_orient(dim, "N", flipped) children();
 }
 
 _test_orient(_default_ethernet_dim, flipped=false)
