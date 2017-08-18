@@ -116,18 +116,6 @@ module _sdcard() {
         cube(sdcard_dim);
 }
 
-module _pins() {
-    foot_height = 2;
-    color(_c_black)
-        cube([pins_dim[0], pins_dim[1], foot_height]);
-
-    pad = pins_dim[0] / 6;
-    color(_c_metal)
-        for (i = [0:5])
-            translate([i * pad + pad / 2, pins_dim[1]/2, 0])
-                cylinder(h=pins_dim[2], d=0.8, $fn=4);
-}
-
 module _rt1() {
     rt1_l = rt1_dim[0];
     rt1_w = rt1_dim[1];
@@ -195,7 +183,7 @@ module beaglebone_black() {
     translate(usb_pos)      usb(usb_dim, direction="E");
     button_pos()            _button();
     translate(rt1_pos)      _rt1();
-    translate(pins_pos)     _pins();
+    translate(pins_pos)     pin_header_pitch254(6, 1, dim=pins_dim);
 
     // bottom
     translate(miniusb_pos)  _miniusb();

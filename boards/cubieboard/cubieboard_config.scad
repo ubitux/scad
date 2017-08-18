@@ -54,7 +54,7 @@ powerbtn_pos = [-.5, 37, board_dim[2]];
 ir_dim = [5, 3.5, 7];
 ir_pos = [13.5, 57, board_dim[2]];
 
-serial_dim = [2.5, 10.25, 8.5];
+serial_dim = [10.25, 2.5, 8.5];
 serial_pos = [44.5, 17, board_dim[2]];
 
 hdmi_dim = [11.25, 15, 6];

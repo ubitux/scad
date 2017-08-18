@@ -41,7 +41,7 @@ extio_pos = [18, 12, board_dim[2]];
 uart0_dim = [4, 4, 5];
 uart0_pos = [1, 36, board_dim[2]];
 
-cfgpins_dim = [4, 6, 5];
+cfgpins_dim = [6, 4, 5];
 cfgpins_pos = [1, 40.5, board_dim[2]];
 
 gpio_dim = [40.5, 4, 4.5];

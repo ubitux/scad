@@ -139,6 +139,34 @@ module _female_header(dim, n, m, pins_sz, pins_dist) {
     }
 }
 
+module _pins_slot(n, u) {
+    x = u/4;
+    z = u/2;
+    h = u*n;
+    slot_polygons = [
+        [-z/2, h/2], [ z/2, h/2], [ u/2, h/2-x], [ u/2,-h/2+x],
+        [ z/2,-h/2], [-z/2,-h/2], [-u/2,-h/2+x], [-u/2, h/2-x],
+    ];
+    polygon(slot_polygons);
+}
+
+module _pin_header(dim, n, m, pins_sz, pins_dist) {
+    l = dim[0];
+    w = dim[1];
+    h = dim[2];
+    color(_c_metal)
+        linear_extrude(height=h)
+            _pins_pos(dim, n, m, pins_dist)
+                square(pins_sz, center=true);
+    pl = (n - 1) * pins_dist;
+    color(_c_black)
+        linear_extrude(height=h/4)
+            translate([(l-pl)/2, w/2])
+                for (x = [0:n-1])
+                    translate([x * pins_dist, 0])
+                        _pins_slot(m, pins_dist);
+}
+
 _default_ethernet_dim = [21, 16, 13.5];
 _default_usb_dim      = [14, 14.5, 8];
 
@@ -152,24 +180,40 @@ module usb(dim=_default_usb_dim, direction="W", flipped=false) {
         _usb(dim);
 }
 
-module female_header_pitch254(n, m, dim=[0,0,0], direction="W", flipped=false) {
-    dim = [
+function _dim254(dim, n, m) = [
         dim[0] ? dim[0] : n*2.54,
         dim[1] ? dim[1] : m*2.5,
         dim[2] ? dim[2] : 8.5,
-    ];
+];
+
+function _dim200(dim, n, m) = [
+        dim[0] ? dim[0] : n*2,
+        dim[1] ? dim[1] : m*2,
+        dim[2] ? dim[2] : 4.5,
+];
+
+module female_header_pitch254(n, m, dim=[0,0,0], direction="W", flipped=false) {
+    dim = _dim254(dim, n, m);
     _set_orient(dim, direction, flipped)
         _female_header(dim, n, m, pins_sz=.64, pins_dist=2.54);
 }
 
 module female_header_pitch200(n, m, dim=[0,0,0], direction="W", flipped=false) {
-    dim = [
-        dim[0] ? dim[0] : n*2,
-        dim[1] ? dim[1] : m*2,
-        dim[2] ? dim[2] : 4.5,
-    ];
+    dim = _dim200(dim, n, m);
     _set_orient(dim, direction, flipped)
         _female_header(dim, n, m, pins_sz=.50, pins_dist=2);
+}
+
+module pin_header_pitch254(n, m, dim=[0,0,0], direction="W", flipped=false) {
+    dim = _dim254(dim, n, m);
+    _set_orient(dim, direction, flipped)
+        _pin_header(dim, n, m, pins_sz=.64, pins_dist=2.54);
+}
+
+module pin_header_pitch200(n, m, dim=[0,0,0], direction="W", flipped=false) {
+    dim = _dim200(dim, n, m);
+    _set_orient(dim, direction, flipped)
+        _pin_header(dim, n, m, pins_sz=.50, pins_dist=2);
 }
 
 module _test_orient(dim, flipped) {
@@ -182,4 +226,4 @@ module _test_orient(dim, flipped) {
 _test_orient(_default_ethernet_dim, flipped=false)
     ethernet();
 
-//!female_header_pitch200(20, 2);
+!pin_header_pitch200(20, 2);

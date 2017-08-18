@@ -147,35 +147,6 @@ module _extio() {
     }
 }
 
-module _dualpins(dim, n) {
-    xpad = dim[0] / (2 + 1);
-    ypad = dim[1] / (n + 1);
-
-    color(_c_metal)
-        linear_extrude(height=dim[2])
-            for (y = [1:n])
-                for (x = [1:2])
-                    translate([x * xpad, y * ypad])
-                        square(.5, center=true);
-
-    base_height = dim[2] / 4;
-    color(_c_black)
-            linear_extrude(height=base_height)
-                for (y = [1:n])
-                    hull()
-                        for (x = [1:2])
-                            translate([x * xpad, y * ypad])
-                                circle(d=2.5, $fn=6, center=true);
-}
-
-module _uart0() {
-    _dualpins(uart0_dim, 2);
-}
-
-module _cfgpins() {
-    _dualpins(cfgpins_dim, 3);
-}
-
 module _powerbtn() {
     l = powerbtn_dim[0];
     w = powerbtn_dim[1];
@@ -237,8 +208,8 @@ module hikey() {
     translate(microusb_pos)     _microusb();
     usb_pos()                   usb(usb_dim, direction="S");
     translate(extio_pos)        _extio();
-    translate(uart0_pos)        _uart0();
-    translate(cfgpins_pos)      _cfgpins();
+    translate(uart0_pos)        pin_header_pitch200(2, 2, dim=uart0_dim, direction="N");
+    translate(cfgpins_pos)      pin_header_pitch200(3, 2, dim=cfgpins_dim, direction="N");
     translate(gpio_pos)         female_header_pitch200(20, 2, dim=gpio_dim);
     translate(powerbtn_pos)     _powerbtn();
     translate(power_pos)        _power();

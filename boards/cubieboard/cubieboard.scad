@@ -134,46 +134,6 @@ module _powerbtn() {
             cube(btn_dim);
 }
 
-module _gpio(n=24, m=2) {
-    xpad = gpio_dim[0] / (n + 1);
-    ypad = gpio_dim[1] / (2 + 1);
-
-    color(_c_metal)
-        linear_extrude(height=gpio_dim[2])
-            for (y = [1:m])
-                for (i = [1:n])
-                    translate([i * xpad, y * ypad])
-                        square(.5, center=true);
-
-    base_height = gpio_dim[2] / 4;
-    color(_c_black)
-        translate([0, 0, gpio_dim[2]-base_height])
-            linear_extrude(height=base_height)
-                for (i = [1:n])
-                    hull()
-                        for (y = [1:m])
-                            translate([i * xpad, y * ypad])
-                                circle(d=2, $fn=6, center=true);
-}
-
-module _serial(n=4) {
-    xpad = serial_dim[0] / (1 + 1);
-    ypad = serial_dim[1] / (n + 1);
-
-    color(_c_metal)
-        linear_extrude(height=serial_dim[2])
-            for (i = [1:n])
-                translate([xpad, i * ypad])
-                    square(.5, center=true);
-
-    base_height = serial_dim[2] / 4;
-    color(_c_black)
-        linear_extrude(height=base_height)
-            for (i = [1:n])
-                translate([xpad, i * ypad])
-                    circle(d=serial_dim[0], $fn=6, center=true);
-}
-
 module _sata_data() {
     color(_c_black) {
         difference() {
@@ -389,14 +349,14 @@ module cubieboard() {
     jack_pos()                  _jack();
     translate(otg_pos)          _otg();
     translate(fel_pos)          _fel();
-    gpio_pos()                  _gpio();
+    gpio_pos()                  pin_header_pitch200(24, 2, dim=gpio_dim, flipped=true);
     translate(usbx2_pos)        _usbx2();
     translate(sata_data_pos)    _sata_data();
     translate(sata_5v_pos)      _sata_5v();
     translate(power_pos)        _power();
     translate(powerbtn_pos)     _powerbtn();
     translate(ir_pos)           _ir();
-    translate(serial_pos)       _serial();
+    translate(serial_pos)       pin_header_pitch254(4, 1, dim=serial_dim, direction="N");
     translate(hdmi_pos)         _hdmi();
     translate(sdslot_pos)       _sdslot();
     translate(sdcard_pos)       _sdcard();
