@@ -13,6 +13,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 include <cubieboard_config.scad>
+use <../utils.scad>
 
 $fn = 30;
 
@@ -131,33 +132,6 @@ module _powerbtn() {
     color(_c_black)
         translate([0, (w-bw)/2, (h-bh)/2])
             cube(btn_dim);
-}
-
-module _ethernet() {
-    l = ethernet_dim[0];
-    w = ethernet_dim[1];
-    h = ethernet_dim[2];
-
-    difference() {
-        color(_c_metal)
-            cube(ethernet_dim);
-        translate([5+_delta, 2, 0.5])
-            color(_c_black)
-                cube([l-5, w-4, h-3]);
-    }
-
-    color(_c_black)
-        for (y = [2, w-4])
-            translate([1, y, 0.5])
-                cube([l-1, 2, 3]);
-
-    color([.3, .9, .3])
-        translate([l-1+_delta, 1.5-_delta, .5])
-            cube([1, 2.5, 2]);
-
-    color([.9, .9, .3])
-        translate([l-1+_delta, w-4+_delta, .5])
-            cube([1, 2.5, 2]);
 }
 
 module _gpio(n=24, m=2) {
@@ -411,7 +385,7 @@ module gpio_pos() {
 module cubieboard() {
     _plate();
 
-    translate(ethernet_pos)     _ethernet();
+    translate(ethernet_pos)     ethernet(ethernet_dim, orient="E");
     jack_pos()                  _jack();
     translate(otg_pos)          _otg();
     translate(fel_pos)          _fel();

@@ -13,6 +13,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 include <bbb_config.scad>
+use <../utils.scad>
 
 $fn = 30;
 
@@ -44,33 +45,6 @@ module _plate() {
             }
         }
     }
-}
-
-module _ethernet() {
-    l = ethernet_dim[0];
-    w = ethernet_dim[1];
-    h = ethernet_dim[2];
-
-    difference() {
-        color(_c_metal)
-            cube(ethernet_dim);
-        translate([-_delta, 2, 0.5])
-            color(_c_black)
-                cube([l-5, w-4, h-3]);
-    }
-
-    color(_c_black)
-        for (y = [2, w-4])
-            translate([0, y, 0.5])
-                cube([l-1, 2, 3]);
-
-    color([.3, .9, .3])
-        translate([-_delta, w-4+_delta, .5])
-            cube([1, 2.5, 2]);
-
-    color([.9, .9, .3])
-        translate([-_delta, 1.5-_delta, .5])
-            cube([1, 2.5, 2]);
 }
 
 module _power() {
@@ -266,7 +240,7 @@ module beaglebone_black() {
 
     // top
     translate(power_pos)    _power();
-    translate(ethernet_pos) _ethernet();
+    translate(ethernet_pos) ethernet(ethernet_dim);
     gpio_pos()              _gpio();
     translate(usb_pos)      _usb();
     button_pos()            _button();
