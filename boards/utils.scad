@@ -111,13 +111,13 @@ module _usb(dim) {
 _default_ethernet_dim = [21, 16, 13.5];
 _default_usb_dim      = [14, 14.5, 8];
 
-module ethernet(dim=_default_ethernet_dim, orient="W", flipped=false) {
-    _set_orient(dim, orient, flipped)
+module ethernet(dim=_default_ethernet_dim, direction="W", flipped=false) {
+    _set_orient(dim, direction, flipped)
         _ethernet(dim);
 }
 
-module usb(dim=_default_usb_dim, orient="W", flipped=false) {
-    _set_orient(dim, orient, flipped)
+module usb(dim=_default_usb_dim, direction="W", flipped=false) {
+    _set_orient(dim, direction, flipped)
         _usb(dim);
 }
 
