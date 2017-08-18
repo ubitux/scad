@@ -78,24 +78,6 @@ module _power() {
                 cylinder(d=2, h=l0);
 }
 
-module _gpio() {
-    l = gpio_dim[0];
-    w = gpio_dim[1];
-    n = 23;
-    s = l/n/2;
-    color(_c_black) {
-        difference() {
-            cube(gpio_dim);
-            for (y = [0:1]) {
-                for (i = [0:n-1]) {
-                    translate([s/2 + i*(l/n), s/2 + y*(w/2), _delta])
-                        cube([s, s, 8.5]);
-                }
-            }
-        }
-    }
-}
-
 module _button() {
     base_l = button_base_dim[0];
     base_w = button_base_dim[1];
@@ -209,7 +191,7 @@ module beaglebone_black() {
     // top
     translate(power_pos)    _power();
     translate(ethernet_pos) ethernet(ethernet_dim);
-    gpio_pos()              _gpio();
+    gpio_pos()              female_header_pitch254(23, 2, dim=gpio_dim);
     translate(usb_pos)      usb(usb_dim, direction="E");
     button_pos()            _button();
     translate(rt1_pos)      _rt1();

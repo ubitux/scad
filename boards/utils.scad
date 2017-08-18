@@ -108,6 +108,37 @@ module _usb(dim) {
             cube([l/3, w, pin_l]);
 }
 
+module _pins_pos(dim, n, m, pins_dist) { // centered position for the pins
+    l = dim[0];
+    w = dim[1];
+    pl = (n - 1) * pins_dist;
+    pw = (m - 1) * pins_dist;
+    if (l <= pl) echo("WARN: female header length looks too small");
+    if (w <= pw) echo("WARN: female header width looks too small");
+    translate([(l-pl)/2, (w-pw)/2])
+        for (y = [0:m-1])
+            for (x = [0:n-1])
+                translate([x * pins_dist, y * pins_dist])
+                    children();
+}
+
+module _female_header(dim, n, m, pins_sz, pins_dist) {
+    h = dim[2];
+    color(_c_black) {
+        difference() {
+            cube(dim);
+            translate([0, 0, _delta])
+                linear_extrude(height=h-.25)
+                    _pins_pos(dim, n, m, pins_dist)
+                        square(pins_sz, center=true);
+            translate([0, 0, h-.25])
+                _pins_pos(dim, n, m, pins_dist)
+                    rotate(45)
+                        cylinder(d1=pins_sz, d2=1.25+pins_sz, h=.25+_delta, $fn=4);
+        }
+    }
+}
+
 _default_ethernet_dim = [21, 16, 13.5];
 _default_usb_dim      = [14, 14.5, 8];
 
@@ -121,6 +152,26 @@ module usb(dim=_default_usb_dim, direction="W", flipped=false) {
         _usb(dim);
 }
 
+module female_header_pitch254(n, m, dim=[0,0,0], direction="W", flipped=false) {
+    dim = [
+        dim[0] ? dim[0] : n*2.54,
+        dim[1] ? dim[1] : m*2.5,
+        dim[2] ? dim[2] : 8.5,
+    ];
+    _set_orient(dim, direction, flipped)
+        _female_header(dim, n, m, pins_sz=.64, pins_dist=2.54);
+}
+
+module female_header_pitch200(n, m, dim=[0,0,0], direction="W", flipped=false) {
+    dim = [
+        dim[0] ? dim[0] : n*2,
+        dim[1] ? dim[1] : m*2,
+        dim[2] ? dim[2] : 4.5,
+    ];
+    _set_orient(dim, direction, flipped)
+        _female_header(dim, n, m, pins_sz=.50, pins_dist=2);
+}
+
 module _test_orient(dim, flipped) {
     translate([0, 0,  0]) _set_orient(dim, "W", flipped) children();
     translate([0, 0, 20]) _set_orient(dim, "S", flipped) children();
@@ -130,3 +181,5 @@ module _test_orient(dim, flipped) {
 
 _test_orient(_default_ethernet_dim, flipped=false)
     ethernet();
+
+//!female_header_pitch200(20, 2);

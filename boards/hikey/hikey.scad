@@ -176,23 +176,6 @@ module _cfgpins() {
     _dualpins(cfgpins_dim, 3);
 }
 
-module _gpio() {
-    l = gpio_dim[0];
-    w = gpio_dim[1];
-    h = gpio_dim[2];
-    n = 20;
-    s = l/n/2;
-    color(_c_black) {
-        difference() {
-            cube(gpio_dim);
-            for (y = [0:1])
-                for (i = [0:n-1])
-                    translate([s/2 + i*(l/n), s/2 + y*(w/2), _delta])
-                        cube([s, s, h+_delta]);
-        }
-    }
-}
-
 module _powerbtn() {
     l = powerbtn_dim[0];
     w = powerbtn_dim[1];
@@ -256,7 +239,7 @@ module hikey() {
     translate(extio_pos)        _extio();
     translate(uart0_pos)        _uart0();
     translate(cfgpins_pos)      _cfgpins();
-    translate(gpio_pos)         _gpio();
+    translate(gpio_pos)         female_header_pitch200(20, 2, dim=gpio_dim);
     translate(powerbtn_pos)     _powerbtn();
     translate(power_pos)        _power();
     translate(capacitor_pos)    _capacitor();
