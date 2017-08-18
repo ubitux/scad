@@ -41,9 +41,8 @@ sata_data_pos = [27, board_dim[1]-sata_data_dim[1], board_dim[2]];
 sata_5v_dim = [7.5, 6, 7.5];
 sata_5v_pos = [18, 47, board_dim[2]];
 
-usbx2_dim = [14.5, 17.5, 16];
+usbx2_dim = [17.5, 14.5, 16];
 usbx2_pos = [29, -.5, board_dim[2]];
-usb_pin_sqrt_len = .6;
 
 power_dim = [12, 7.5, 6];
 power_pos = [0, 50.5, board_dim[2]];

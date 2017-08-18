@@ -144,47 +144,6 @@ module _sata_5v() {
                     square(.5);
 }
 
-module _usbx2() {
-    pin_l = usb_pin_sqrt_len;
-    l = usbx2_dim[0] - pin_l;
-    w = usbx2_dim[1] - pin_l*2;
-    h = usbx2_dim[2] - pin_l*2;
-
-    //%cube(usbx2_dim);
-
-    // separator
-    color(_c_metal)
-        translate([2*t, 0, (h-4)/2 + pin_l])
-            cube([l-4*t, w, 4]);
-
-    t = 0.25;
-    p = 0.75;
-    z = pin_l * sqrt(2);
-
-    translate([0, pin_l, 0]) {
-        translate([0, 0, pin_l]) {
-            color(_c_metal) {
-                difference() {
-                    cube([l, w, h]);
-                    translate([t, -t, t])
-                        cube([l-t*2, w-t-_delta, h-t*2]);
-                }
-                translate([0,   0, h-t]) rotate(a= 135, v=[1,0,0]) translate([p, 0, -t]) cube([l - 2*p, z,       t]);
-                translate([0,   0,   t]) rotate(a=-135, v=[1,0,0]) translate([p, 0,  0]) cube([l - 2*p, z,       t]);
-                translate([t,   0,   0]) rotate(a=-135, v=[0,0,1]) translate([0, -t, p]) cube([z,       t, h - 2*p]);
-                translate([l-t, 0,   0]) rotate(a= -45, v=[0,0,1]) translate([0,  0, p]) cube([z,       t, h - 2*p]);
-            }
-            color(_c_black) {
-                translate([1, 0, h-3.5])  cube([l-2, w-t, 2]);
-                translate([1, 0, h-12.5]) cube([l-2, w-t, 2]);
-            }
-        }
-        color(_c_metal)
-            translate([0, 2*w/3, 0])
-                cube([l, w/3, pin_l]);
-    }
-}
-
 module _power() {
     l = power_dim[0];
     w = power_dim[1];
@@ -301,7 +260,7 @@ module cubieboard() {
     translate(otg_pos)          _otg();
     translate(fel_pos)          _fel();
     gpio_pos()                  pin_header_pitch200(24, 2, dim=gpio_dim, flipped=true);
-    translate(usbx2_pos)        _usbx2();
+    translate(usbx2_pos)        usbx2(dim=usbx2_dim, direction="S");
     translate(sata_data_pos)    _sata_data();
     translate(sata_5v_pos)      _sata_5v();
     translate(power_pos)        _power();

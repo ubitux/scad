@@ -79,7 +79,7 @@ module _ethernet(dim) {
             cube([1, 2.5, 2]);
 }
 
-module _usb(dim) {
+module _usb(dim, n=1, clr="white") {
     pin_l = .6;
     l = dim[0] - pin_l;
     w = dim[1] - pin_l*2;
@@ -101,13 +101,27 @@ module _usb(dim) {
             translate([0,   t,   p]) rotate(a= 45, v=[0,0,1]) translate([-z, -t,  0]) cube([z,       t, h - 2*p]);
             translate([0, w-t,   p]) rotate(a=-45, v=[0,0,1]) translate([-z,  0,  0]) cube([z,       t, h - 2*p]);
         }
-        color("white")
-            translate([0, 1, h-3.5])
-                cube([l-t, w-2, 2]);
+        color(clr)
+            for (y = [0:n-1])
+                translate([0, 1, h-(3.5+9*y)]) // XXX: random shit
+                    cube([l-t, w-2, 2]);
     }
     color(_c_metal)
         translate([pin_l+l-l/3, pin_l])
             cube([l/3, w, pin_l]);
+}
+
+module _usbx2(dim) {
+    _usb(dim, n=2, clr=_c_black);
+
+    // separator (XXX: random shit)
+    pin_l = .6;
+    t = 0.25;
+    l = dim[0] - pin_l - t;
+    w = dim[1] - pin_l*2 - t*2;
+    color(_c_metal)
+        translate([0, (dim[1]-w)/2, (dim[2]-3.5)/2])
+            cube([l, w, 3.5]);
 }
 
 module _pins_pos(dim, n, m, pins_dist) { // centered position for the pins
@@ -171,6 +185,7 @@ module _pin_header(dim, n, m, pins_sz, pins_dist) {
 
 _default_ethernet_dim = [21, 16, 13.5];
 _default_usb_dim      = [14, 14.5, 8];
+_default_usbx2_dim    = [17.5, 14.5, 16];
 _default_hdmi_dim     = [11.5, 15, 6];
 _default_microusb_dim = [6, 8, 3];
 _default_jack_dim     = [12+2, 6.5, 5];
@@ -254,6 +269,11 @@ module ethernet(dim=_default_ethernet_dim, direction="W", flipped=false) {
 module usb(dim=_default_usb_dim, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
         _usb(dim);
+}
+
+module usbx2(dim=_default_usbx2_dim, direction="W", flipped=false) {
+    _set_orient(dim, direction, flipped)
+        _usbx2(dim);
 }
 
 module hdmi(dim=_default_hdmi_dim, direction="W", flipped=false) {
