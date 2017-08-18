@@ -170,6 +170,7 @@ module _pin_header(dim, n, m, pins_sz, pins_dist) {
 _default_ethernet_dim = [21, 16, 13.5];
 _default_usb_dim      = [14, 14.5, 8];
 _default_hdmi_dim     = [11.5, 15, 6];
+_default_microusb_dim = [6, 8, 3];
 
 module _hdmi(dim) {
     l = dim[0];
@@ -196,6 +197,30 @@ module _hdmi(dim) {
             cube([7, w-2*2, 1]);
 }
 
+module _microusb(dim) {
+    l = dim[0];
+    w = dim[1];
+    h = dim[2];
+    microusb_polygon_pos = [[1, h], [w-1, h], [w, h-1],
+                            [w-2, 0], [2, 0], [0, h-1]];
+    color(_c_metal) {
+        translate([l-1, 0])
+            cube([1, w, h]);
+        rotate([90, 0, 90]) {
+            linear_extrude(height=l-1) {
+                difference() {
+                    polygon(microusb_polygon_pos);
+                    offset(r=-.5)
+                        polygon(microusb_polygon_pos);
+                }
+            }
+        }
+    }
+    color(_c_black)
+        translate([1.5, (w-4)/2, h-1.5])
+            cube([l-2.5, 4, .5]);
+}
+
 module ethernet(dim=_default_ethernet_dim, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
         _ethernet(dim);
@@ -209,6 +234,11 @@ module usb(dim=_default_usb_dim, direction="W", flipped=false) {
 module hdmi(dim=_default_hdmi_dim, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
         _hdmi(dim);
+}
+
+module microusb(dim=_default_microusb_dim, direction="W", flipped=false) {
+    _set_orient(dim, direction, flipped)
+        _microusb(dim);
 }
 
 function _dim254(dim, n, m) = [

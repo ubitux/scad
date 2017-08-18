@@ -26,7 +26,7 @@ sdcard_pos = [sdslot_pos[0]+.25, -2, board_dim[2]];
 hdmi_dim = [9.25, 15, 6];
 hdmi_pos = [17.5, -2, board_dim[2]];
 
-microusb_dim = [8, 6, 3];
+microusb_dim = [6, 8, 3];
 microusb_pos = [38, -1, board_dim[2]];
 
 usb_dim = [14, 14.5, 7];
