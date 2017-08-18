@@ -252,7 +252,7 @@ module hikey() {
     translate(sdcard_pos)       _sdcard();
     translate(hdmi_pos)         _hdmi();
     translate(microusb_pos)     _microusb();
-    usb_pos()                   usb(usb_dim, orient="S");
+    usb_pos()                   usb(usb_dim, direction="S");
     translate(extio_pos)        _extio();
     translate(uart0_pos)        _uart0();
     translate(cfgpins_pos)      _cfgpins();

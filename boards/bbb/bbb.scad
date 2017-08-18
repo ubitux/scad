@@ -210,7 +210,7 @@ module beaglebone_black() {
     translate(power_pos)    _power();
     translate(ethernet_pos) ethernet(ethernet_dim);
     gpio_pos()              _gpio();
-    translate(usb_pos)      usb(usb_dim, orient="E");
+    translate(usb_pos)      usb(usb_dim, direction="E");
     button_pos()            _button();
     translate(rt1_pos)      _rt1();
     translate(pins_pos)     _pins();

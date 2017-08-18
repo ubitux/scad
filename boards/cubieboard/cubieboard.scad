@@ -385,7 +385,7 @@ module gpio_pos() {
 module cubieboard() {
     _plate();
 
-    translate(ethernet_pos)     ethernet(ethernet_dim, orient="E");
+    translate(ethernet_pos)     ethernet(ethernet_dim, direction="E");
     jack_pos()                  _jack();
     translate(otg_pos)          _otg();
     translate(fel_pos)          _fel();
