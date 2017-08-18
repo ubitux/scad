@@ -316,5 +316,7 @@ module _test_orient(dim, flipped) {
 
 _test_orient(_default_ethernet_dim, flipped=false)
     ethernet();
-
-!pin_header_pitch200(20, 2);
+    //usb();
+    //hdmi();
+    //microusb();
+    //jack();
