@@ -63,6 +63,11 @@ module _sdslot() {
         cube(sdslot_dim);
 }
 
+module _sdcard() {
+    color(_c_black)
+        cube(sdcard_dim);
+}
+
 module _hdmi() {
     l = hdmi_dim[0];
     w = hdmi_dim[1];
@@ -279,6 +284,7 @@ module hikey() {
     _plate();
 
     translate(sdslot_pos)       _sdslot();
+    translate(sdcard_pos)       _sdcard();
     translate(hdmi_pos)         _hdmi();
     translate(microusb_pos)     _microusb();
     usb_pos()                   _usb();

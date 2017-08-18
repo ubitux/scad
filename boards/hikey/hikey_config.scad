@@ -20,6 +20,9 @@ min_board_z = 2;
 sdslot_dim = [14, 15.5, 1.25];
 sdslot_pos = [1.25, 0, board_dim[2]];
 
+sdcard_dim = [11, 15, 1];
+sdcard_pos = [sdslot_pos[0]+.25, -2, board_dim[2]];
+
 hdmi_dim = [15, 9.25, 6];
 hdmi_pos = [17.5, -2, board_dim[2]];
 
