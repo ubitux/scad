@@ -134,7 +134,7 @@ module _female_header(dim, n, m, pins_sz, pins_dist) {
             translate([0, 0, h-.25])
                 _pins_pos(dim, n, m, pins_dist)
                     rotate(45)
-                        cylinder(d1=pins_sz, d2=1.25+pins_sz, h=.25+_delta, $fn=4);
+                        cylinder(d1=pins_sz*sqrt(2), d2=1.25+pins_sz, h=.25+_delta, $fn=4);
         }
     }
 }
