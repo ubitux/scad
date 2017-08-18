@@ -96,38 +96,6 @@ module _gpio() {
     }
 }
 
-module _usb() {
-    pin_l = usb_pin_sqrt_len;
-    l = usb_dim[0] - pin_l;
-    w = usb_dim[1] - pin_l*2;
-    h = usb_dim[2] - pin_l*2;
-
-    t = 0.25;
-    p = 0.75;
-    z = pin_l * sqrt(2);
-
-    translate([0, pin_l, 0]) {
-        translate([0, 0, pin_l]) {
-            color(_c_metal) {
-                difference() {
-                    cube([l, w, h]);
-                    translate([t, t, t])
-                        cube([l-t+_delta, w-t*2, h-t*2]);
-                }
-                translate([l,   0, h-t]) rotate(a=-45, v=[0,1,0]) translate([0,  p,  0]) cube([z, w - 2*p,       t]);
-                translate([l,   0,   t]) rotate(a= 45, v=[0,1,0]) translate([0,  p, -t]) cube([z, w - 2*p,       t]);
-                translate([l,   t,   0]) rotate(a=-45, v=[0,0,1]) translate([0, -t,  p]) cube([z,       t, h - 2*p]);
-                translate([l, w-t,   0]) rotate(a= 45, v=[0,0,1]) translate([0,  0,  p]) cube([z,       t, h - 2*p]);
-            }
-            color("white")
-                translate([t, 1, h-3.5])
-                    cube([l-t, w-2, 2]);
-        }
-        color(_c_metal)
-            cube([l/3, w, pin_l]);
-    }
-}
-
 module _button() {
     base_l = button_base_dim[0];
     base_w = button_base_dim[1];
@@ -242,7 +210,7 @@ module beaglebone_black() {
     translate(power_pos)    _power();
     translate(ethernet_pos) ethernet(ethernet_dim);
     gpio_pos()              _gpio();
-    translate(usb_pos)      _usb();
+    translate(usb_pos)      usb(usb_dim, orient="E");
     button_pos()            _button();
     translate(rt1_pos)      _rt1();
     translate(pins_pos)     _pins();

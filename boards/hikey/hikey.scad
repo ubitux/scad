@@ -13,6 +13,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 include <hikey_config.scad>
+use <../utils.scad>
 
 $fn = 30;
 
@@ -118,42 +119,6 @@ module _microusb() {
     color(_c_black)
         translate([2, 0, h-1.5])
             cube([l-4, w-1, .5]);
-}
-
-module _usb() {
-    translate([0, usb_dim[1]]) {
-        rotate([0, 0, -90]) {
-            pin_l = usb_pin_sqrt_len;
-            l = usb_dim[1] - pin_l;
-            w = usb_dim[0] - pin_l*2;
-            h = usb_dim[2] - pin_l*2;
-
-            t = 0.25;
-            p = 0.75;
-            z = pin_l * sqrt(2);
-
-            translate([0, pin_l, 0]) {
-                translate([0, 0, pin_l]) {
-                    color(_c_metal) {
-                        difference() {
-                            cube([l, w, h]);
-                            translate([t, t, t])
-                                cube([l-t+_delta, w-t*2, h-t*2]);
-                        }
-                        translate([l,   0, h-t]) rotate(a=-45, v=[0,1,0]) translate([0,  p,  0]) cube([z, w - 2*p,       t]);
-                        translate([l,   0,   t]) rotate(a= 45, v=[0,1,0]) translate([0,  p, -t]) cube([z, w - 2*p,       t]);
-                        translate([l,   t,   0]) rotate(a=-45, v=[0,0,1]) translate([0, -t,  p]) cube([z,       t, h - 2*p]);
-                        translate([l, w-t,   0]) rotate(a= 45, v=[0,0,1]) translate([0,  0,  p]) cube([z,       t, h - 2*p]);
-                    }
-                    color("white")
-                        translate([t, 1, h-3.5])
-                            cube([l-t, w-2, 2]);
-                }
-                color(_c_metal)
-                    cube([l/3, w, pin_l]);
-            }
-        }
-    }
 }
 
 module _extio() {
@@ -287,7 +252,7 @@ module hikey() {
     translate(sdcard_pos)       _sdcard();
     translate(hdmi_pos)         _hdmi();
     translate(microusb_pos)     _microusb();
-    usb_pos()                   _usb();
+    usb_pos()                   usb(usb_dim, orient="S");
     translate(extio_pos)        _extio();
     translate(uart0_pos)        _uart0();
     translate(cfgpins_pos)      _cfgpins();

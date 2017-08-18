@@ -36,9 +36,8 @@ gpio_dim = [59, 5, 8.5];
 gpio_pos_tab = [[18,                0.5, board_dim[2]],
                 [18, board_dim[1]-5-0.5, board_dim[2]]];
 
-usb_pin_sqrt_len = .6;
 usb_dim = [14, 14.5, 8];
-usb_pos = [72.5, in2mm(405) - usb_pin_sqrt_len, board_dim[2]];
+usb_pos = [72.5, in2mm(405) - .6, board_dim[2]];
 
 button_base_dim = [4, 3, 1.5];
 button_pusher_dim = [2, 1.5, 0.5];

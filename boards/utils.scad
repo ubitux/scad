@@ -77,12 +77,48 @@ module _ethernet(dim) {
             cube([1, 2.5, 2]);
 }
 
+module _usb(dim) {
+    pin_l = .6;
+    l = dim[0] - pin_l;
+    w = dim[1] - pin_l*2;
+    h = dim[2] - pin_l*2;
+
+    t = 0.25;
+    p = 0.75;
+    z = pin_l * sqrt(2);
+
+    translate([pin_l, pin_l, pin_l]) {
+        color(_c_metal) {
+            difference() {
+                cube([l, w, h]);
+                translate([-_delta, t, t])
+                    cube([l-t+_delta, w-t*2, h-t*2]);
+            }
+            translate([0,   p, h-t]) rotate(a= 45, v=[0,1,0]) translate([-z,  0,  0]) cube([z, w - 2*p,       t]);
+            translate([0,   p,   t]) rotate(a=-45, v=[0,1,0]) translate([-z,  0, -t]) cube([z, w - 2*p,       t]);
+            translate([0,   t,   p]) rotate(a= 45, v=[0,0,1]) translate([-z, -t,  0]) cube([z,       t, h - 2*p]);
+            translate([0, w-t,   p]) rotate(a=-45, v=[0,0,1]) translate([-z,  0,  0]) cube([z,       t, h - 2*p]);
+        }
+        color("white")
+            translate([0, 1, h-3.5])
+                cube([l-t, w-2, 2]);
+    }
+    color(_c_metal)
+        translate([pin_l+l-l/3, pin_l])
+            cube([l/3, w, pin_l]);
+}
 
 _default_ethernet_dim = [21, 16, 13.5];
+_default_usb_dim      = [14, 14.5, 8];
 
 module ethernet(dim=_default_ethernet_dim, orient="W", flipped=false) {
     _set_orient(dim, orient, flipped)
         _ethernet(dim);
+}
+
+module usb(dim=_default_usb_dim, orient="W", flipped=false) {
+    _set_orient(dim, orient, flipped)
+        _usb(dim);
 }
 
 module _test_orient(dim, flipped) {

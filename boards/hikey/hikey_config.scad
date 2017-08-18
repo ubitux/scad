@@ -29,12 +29,11 @@ hdmi_pos = [17.5, -2, board_dim[2]];
 microusb_dim = [8, 6, 3];
 microusb_pos = [38, -1, board_dim[2]];
 
-usb_dim = [14.5, 14, 7];
+usb_dim = [14, 14.5, 7];
 usb_pos_tab = [
     [69, 0, board_dim[2]],
     [49, 0, board_dim[2]],
 ];
-usb_pin_sqrt_len = .6;
 
 extio_dim = [30, 6, 4];
 extio_pos = [18, 12, board_dim[2]];
