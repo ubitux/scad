@@ -327,11 +327,11 @@ module pin_header_pitch200(n, m, dim=[0,0,0], direction="W", flipped=false) {
         _pin_header(dim, n, m, pins_sz=.50, pins_dist=2);
 }
 
-module _test_orient(dim, flipped) {
-    translate([0, 0,  0]) _set_orient(dim, "W", flipped) children();
-    translate([0, 0, 20]) _set_orient(dim, "S", flipped) children();
-    translate([0, 0, 40]) _set_orient(dim, "E", flipped) children();
-    translate([0, 0, 60]) _set_orient(dim, "N", flipped) children();
+module _test_orient(dim, flipped, pad=20) {
+    translate([0, 0, 0*pad]) _set_orient(dim, "W", flipped) children();
+    translate([0, 0, 1*pad]) _set_orient(dim, "S", flipped) children();
+    translate([0, 0, 2*pad]) _set_orient(dim, "E", flipped) children();
+    translate([0, 0, 3*pad]) _set_orient(dim, "N", flipped) children();
 }
 
 _test_orient(_default_ethernet_dim, flipped=false)
