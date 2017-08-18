@@ -48,30 +48,6 @@ module _plate() {
     }
 }
 
-module _jack() {
-    l = jack_dim[0];
-    w = jack_dim[1];
-    h = jack_dim[2];
-
-    lcyl = 2;
-    tcyl = 1;
-    l0 = l - lcyl;
-
-    color(_c_black) {
-        difference() {
-            union() {
-                cube([l0, w, h]);
-                translate([l0, w/2, h/2])
-                    rotate([0, 90, 0])
-                        cylinder(d=h, h=lcyl);
-            }
-            translate([-_delta/2, w/2, h/2])
-                rotate([0, 90, 0])
-                    cylinder(d=h-tcyl, h=l+_delta);
-        }
-    }
-}
-
 module _otg() {
     l = otg_dim[0];
     w = otg_dim[1];
@@ -321,7 +297,7 @@ module cubieboard() {
     _plate();
 
     translate(ethernet_pos)     ethernet(ethernet_dim, direction="E");
-    jack_pos()                  _jack();
+    jack_pos()                  jack(jack_dim, direction="E");
     translate(otg_pos)          _otg();
     translate(fel_pos)          _fel();
     gpio_pos()                  pin_header_pitch200(24, 2, dim=gpio_dim, flipped=true);

@@ -171,6 +171,7 @@ _default_ethernet_dim = [21, 16, 13.5];
 _default_usb_dim      = [14, 14.5, 8];
 _default_hdmi_dim     = [11.5, 15, 6];
 _default_microusb_dim = [6, 8, 3];
+_default_jack_dim     = [12+2, 6.5, 5];
 
 module _hdmi(dim) {
     l = dim[0];
@@ -221,6 +222,28 @@ module _microusb(dim) {
             cube([l-2.5, 4, .5]);
 }
 
+module _jack(dim) {
+    l = dim[0];
+    w = dim[1];
+    h = dim[2];
+
+    lcyl = 2;
+    color(_c_black) {
+        difference() {
+            union() {
+                translate([lcyl, 0, 0])
+                    cube([l-lcyl, w, h]);
+                translate([0, w/2, h/2])
+                    rotate([90, 0, 90])
+                        cylinder(d=h, h=lcyl);
+            }
+            translate([-_delta/2, w/2, h/2])
+                rotate([90, 0, 90])
+                    cylinder(d=3.5, h=l+_delta);
+        }
+    }
+}
+
 module ethernet(dim=_default_ethernet_dim, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
         _ethernet(dim);
@@ -239,6 +262,11 @@ module hdmi(dim=_default_hdmi_dim, direction="W", flipped=false) {
 module microusb(dim=_default_microusb_dim, direction="W", flipped=false) {
     _set_orient(dim, direction, flipped)
         _microusb(dim);
+}
+
+module jack(dim=_default_jack_dim, direction="W", flipped=false) {
+    _set_orient(dim, direction, flipped)
+        _jack(dim);
 }
 
 function _dim254(dim, n, m) = [
