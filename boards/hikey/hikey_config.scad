@@ -13,14 +13,12 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 board_dim = [85.25, 54, 1.25];
-
 hole_d = 2.5;
-min_board_z = 2;
 
-sdslot_dim = [14, 15.5, 1.25];
+sdslot_dim = [15.5, 14, 1.25];
 sdslot_pos = [1.25, 0, board_dim[2]];
 
-sdcard_dim = [11, 15, 1];
+sdcard_dim = [15, 11, 1];
 sdcard_pos = [sdslot_pos[0]+.25, -2, board_dim[2]];
 
 hdmi_dim = [9.25, 15, 6];
@@ -50,9 +48,9 @@ gpio_pos = [9.5, 48, board_dim[2]];
 powerbtn_dim = [4, 3, 2];
 powerbtn_pos = [52.5, board_dim[1]-powerbtn_dim[1]-1, board_dim[2]];
 
-power_dim = [9, 13, 6];
-power_pos = [board_dim[0]-power_dim[0]-8.75,
-             board_dim[1]-power_dim[1], board_dim[2]];
+power_dim = [13, 9, 6];
+power_pos = [board_dim[0]-power_dim[1]-8.75,
+             board_dim[1]-power_dim[0], board_dim[2]];
 
 capacitor_dim = [6, 6, 5];
 capacitor_pos = [60, 46, board_dim[2]];

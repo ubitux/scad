@@ -13,9 +13,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 include <bbb_config.scad>
-use <../electronics.scad>
-use <../case.scad>
-use <../utils.scad>
+use <utils.scad>
 
 $fn = 30;
 
@@ -26,47 +24,20 @@ _c_gold  = [.8, .5, .0];
 _c_metal = [.7, .7, .7];
 _c_black = [.3, .3, .3];
 
-_holes_pos = [
-    [in2mm( 575), in2mm(2025)],
-    [in2mm( 575), in2mm( 125)],
-    [in2mm(3175), in2mm( 250)],
-    [in2mm(3175), in2mm(1900)],
-];
-
-module _plate_2d() {
-    l = board_dim[0];
-    w = board_dim[1];
-    difference() {
-        square([l, w]);
-        difference() {
-            union() {
-                translate([        0,         0]) square(ledgesz);
-                translate([        0, w-ledgesz]) square(ledgesz);
-                translate([l-redgesz, w-redgesz]) square(redgesz);
-                translate([l-redgesz,         0]) square(redgesz);
-            }
-
-            translate([  ledgesz,   ledgesz]) circle(ledgesz);
-            translate([  ledgesz, w-ledgesz]) circle(ledgesz);
-            translate([l-redgesz, w-redgesz]) circle(redgesz);
-            translate([l-redgesz,   redgesz]) circle(redgesz);
-        }
-    }
-}
-
 module _plate() {
     color(_c_gray) {
         linear_extrude(height=board_dim[2]) {
             difference() {
-                _plate_2d();
-                hole_positions(_holes_pos)
+                square([board_dim[0], board_dim[1]]);
+                hole_positions()
                     circle(d=hole_d+1);
+                plate_edges();
             }
         }
     }
     color(_c_gold) {
         linear_extrude(height=board_dim[2]) {
-            hole_positions(_holes_pos) {
+            hole_positions() {
                 difference() {
                     circle(d=hole_d+1);
                     circle(d=hole_d);
@@ -108,10 +79,6 @@ module _power() {
 }
 
 module _button() {
-    // XXX
-    button_base_dim = [4, 3, 1.5];
-    button_pusher_dim = [2, 1.5, 0.5];
-
     base_l = button_base_dim[0];
     base_w = button_base_dim[1];
     base_h = button_base_dim[2];
@@ -119,12 +86,14 @@ module _button() {
     button_l = button_pusher_dim[0];
     button_w = button_pusher_dim[1];
 
+    translate([0, 0, board_dim[2]]) {
         color(_c_metal)
             cube(button_base_dim);
 
         color(_c_black)
             translate([(base_l-button_l)/2, (base_w-button_w)/2, base_h])
                 cube(button_pusher_dim);
+    }
 }
 
 module _miniusb() {
@@ -166,56 +135,63 @@ module _rt1() {
             cube([head_l, head_w, head_h]);
 }
 
-_comp_info = [
-    [power_dim,     "W", power_pos,             false, [-1, 0, 0]],
-    [ethernet_dim,  "W", ethernet_pos,          false, [-1, 0, 0]],
-    [gpio_dim,      "W", gpio_pos_tab[0],       false, [ 0, 0, 1]],
-    [gpio_dim,      "W", gpio_pos_tab[1],       false, [ 0, 0, 1]],
-    [usb_dim,       "E", usb_pos,               false, [-1, 0, 0]],
-    [button_dim,    "W", button_pos_tab[0],     false, [ 0, 0, 0]],
-    [button_dim,    "W", button_pos_tab[1],     false, [ 0, 0, 0]],
-    [button_dim,    "W", button_pos_tab[2],     false, [ 0, 0, 0]],
-    [rt1_dim,       "W", rt1_pos,               false, [ 0, 0, 0]],
-    [pins_dim,      "W", pins_pos,              false, [ 0, 0, 1]],
-    [miniusb_dim,   "W", miniusb_pos,           false, [-1, 0, 0]],
-    [hdmi_dim,      "E", hdmi_pos,              false, [-1, 0, 0]],
-    [sdslot_dim,    "E", sdslot_pos,            false, [ 0, 0, 0]],
-    [sdcard_dim,    "E", sdcard_pos,            false, [-1, 0, 0]],
-];
+module hole_positions() {
+    translate([in2mm( 575), in2mm(2025)]) children();
+    translate([in2mm( 575), in2mm( 125)]) children();
+    translate([in2mm(3175), in2mm( 250)]) children();
+    translate([in2mm(3175), in2mm(1900)]) children();
+}
 
-module beaglebone_black() {
-    _plate();
-    set_components(_comp_info) {
-        _power();
-        ethernet(dim=ethernet_dim);
-        female_header_pitch254(dim=gpio_dim, n=23, m=2);
-        female_header_pitch254(dim=gpio_dim, n=23, m=2);
-        usb(dim=usb_dim);
-        _button();
-        _button();
-        _button();
-        _rt1();
-        pin_header_pitch254(dim=pins_dim, n=6, m=1);
-        _miniusb();
-        _hdmi();
-        sdslot(dim=sdslot_dim);
-        sdcard(dim=sdcard_dim);
+module plate_edges() {
+    l = board_dim[0];
+    w = board_dim[1];
+
+    difference() {
+        union() {
+            translate([        0,         0]) square(ledgesz);
+            translate([        0, w-ledgesz]) square(ledgesz);
+            translate([l-redgesz, w-redgesz]) square(redgesz);
+            translate([l-redgesz,         0]) square(redgesz);
+        }
+
+        translate([  ledgesz,   ledgesz]) circle(ledgesz);
+        translate([  ledgesz, w-ledgesz]) circle(ledgesz);
+        translate([l-redgesz, w-redgesz]) circle(redgesz);
+        translate([l-redgesz,   redgesz]) circle(redgesz);
     }
 }
 
-module beaglebone_black_case(part) {
-    case(part,
-         comp_info=_comp_info,
-         min_z=4, max_z=7.5, board_h=board_dim[2],
-         holes_pos=_holes_pos, holes_d=hole_d)
-        _plate_2d();
+module gpio_pos() {
+    for (pos = gpio_pos_tab)
+        translate(pos)
+            children();
 }
 
-*demo_board(board_dim)
-    beaglebone_black();
-
-demo_case(board_dim) {
-    beaglebone_black_case("bottom");
-    beaglebone_black();
-    beaglebone_black_case("top");
+module button_pos() {
+    translate([5.5, 40])     children();
+    translate([5.5, 40+9.5]) children();
+    translate([74, 41.5])    children();
 }
+
+module beaglebone_black() {
+    _plate();
+
+    // top
+    translate(power_pos)    _power();
+    translate(ethernet_pos) ethernet(ethernet_dim);
+    gpio_pos()              female_header_pitch254(23, 2, dim=gpio_dim);
+    translate(usb_pos)      usb(usb_dim, direction="E");
+    button_pos()            _button();
+    translate(rt1_pos)      _rt1();
+    translate(pins_pos)     pin_header_pitch254(6, 1, dim=pins_dim);
+
+    // bottom
+    translate(miniusb_pos)  _miniusb();
+    translate(hdmi_pos)     _hdmi();
+    translate(sdslot_pos)   _sdslot();
+    translate(sdcard_pos)   _sdcard();
+}
+
+rotate([0, 0, $t*360])
+    translate([-board_dim[0]/2, -board_dim[1]/2])
+        beaglebone_black();

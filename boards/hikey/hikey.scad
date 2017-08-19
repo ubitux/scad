@@ -13,6 +13,8 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 include <hikey_config.scad>
+use <../electronics.scad>
+use <../case.scad>
 use <../utils.scad>
 
 $fn = 30;
@@ -24,19 +26,27 @@ _c_gold  = [.8, .5, .0];
 _c_metal = [.7, .7, .7];
 _c_black = [.3, .3, .3];
 
+_hole_pad = 4;
+_holes_pos = [for (y = [       19, board_dim[1] - _hole_pad],
+                   x = [_hole_pad, board_dim[0] - _hole_pad]) [x, y]];
+
+module _plate_2d() {
+    square([board_dim[0], board_dim[1]]);
+}
+
 module _plate() {
     color(_c_gray) {
         linear_extrude(height=board_dim[2]) {
             difference() {
-                square([board_dim[0], board_dim[1]]);
-                hole_positions()
+                _plate_2d();
+                hole_positions(_holes_pos)
                     circle(d=hole_d+2.25);
             }
         }
     }
     color(_c_gold) {
         linear_extrude(height=board_dim[2]) {
-            hole_positions() {
+            hole_positions(_holes_pos) {
                 difference() {
                     circle(d=hole_d+2.25);
                     circle(d=hole_d);
@@ -44,29 +54,6 @@ module _plate() {
             }
         }
     }
-}
-
-module hole_positions() {
-    hole_pad = 4;
-    hole_x1 = hole_pad;
-    hole_x2 = board_dim[0] - hole_pad;
-    hole_y1 = 19;
-    hole_y2 = board_dim[1] - hole_pad;
-
-    for (y = [hole_y1, hole_y2])
-        for (x = [hole_x1, hole_x2])
-            translate([x, y])
-                children();
-}
-
-module _sdslot() {
-    color(_c_metal)
-        cube(sdslot_dim);
-}
-
-module _sdcard() {
-    color(_c_black)
-        cube(sdcard_dim);
 }
 
 module _extio() {
@@ -107,10 +94,12 @@ module _powerbtn() {
 }
 
 module _power() {
-    l = power_dim[0];
-    w = power_dim[1];
+    l = power_dim[1];
+    w = power_dim[0];
     h = power_dim[2];
 
+    translate([w, 0, 0]) // XXX
+    rotate([0, 0, 90]) { // XXX
     color(_c_black) {
         difference() {
             union() {
@@ -128,6 +117,7 @@ module _power() {
         translate([l/2, w-.5, h/2])
             rotate([90, 0, 0])
                 cylinder(d=2, h=9);
+    }
 }
 
 module _capacitor() {
@@ -141,29 +131,54 @@ module _capacitor() {
             cylinder(d=l, h=h-1.5);
 }
 
-module usb_pos() {
-    for (pos = usb_pos_tab)
-        translate(pos)
-            children();
-}
+_comp_info = [
+    [sdslot_dim,    "S", sdslot_pos,        false, [ 0, 0, 0]],
+    [sdcard_dim,    "S", sdcard_pos,        false, [-1, 0, 0]],
+    [hdmi_dim,      "S", hdmi_pos,          false, [-1, 0, 0]],
+    [microusb_dim,  "S", microusb_pos,      false, [-1, 0, 0]],
+    [usb_dim,       "S", usb_pos_tab[0],    false, [-1, 0, 0]],
+    [usb_dim,       "S", usb_pos_tab[1],    false, [-1, 0, 0]],
+    [extio_dim,     "W", extio_pos,         false, [ 0, 0, 1]],
+    [uart0_dim,     "N", uart0_pos,         false, [ 0, 0, 1]],
+    [cfgpins_dim,   "N", cfgpins_pos,       false, [ 0, 0, 1]],
+    [gpio_dim,      "W", gpio_pos,          false, [ 0, 0, 1]],
+    [powerbtn_dim,  "W", powerbtn_pos,      false, [ 0, 0, 1]],
+    [power_dim,     "N", power_pos,         false, [-1, 0, 0]],
+    [capacitor_dim, "W", capacitor_pos,     false, [ 0, 0, 0]],
+];
 
 module hikey() {
     _plate();
-
-    translate(sdslot_pos)       _sdslot();
-    translate(sdcard_pos)       _sdcard();
-    translate(hdmi_pos)         hdmi(hdmi_dim, direction="S");
-    translate(microusb_pos)     microusb(microusb_dim, direction="S");
-    usb_pos()                   usb(usb_dim, direction="S");
-    translate(extio_pos)        _extio();
-    translate(uart0_pos)        pin_header_pitch200(2, 2, dim=uart0_dim, direction="N");
-    translate(cfgpins_pos)      pin_header_pitch200(3, 2, dim=cfgpins_dim, direction="N");
-    translate(gpio_pos)         female_header_pitch200(20, 2, dim=gpio_dim);
-    translate(powerbtn_pos)     _powerbtn();
-    translate(power_pos)        _power();
-    translate(capacitor_pos)    _capacitor();
+    set_components(_comp_info) {
+        sdslot(dim=sdslot_dim);
+        sdcard(dim=sdcard_dim);
+        hdmi(dim=hdmi_dim);
+        microusb(dim=microusb_dim);
+        usb(dim=usb_dim);
+        usb(dim=usb_dim);
+        _extio();
+        pin_header_pitch200(dim=uart0_dim, n=2, m=2);
+        pin_header_pitch200(dim=cfgpins_dim, n=3, m=2);
+        female_header_pitch200(dim=gpio_dim, n=20, m=2);
+        _powerbtn();
+        _power();
+        _capacitor();
+    }
 }
 
-rotate([0, 0, $t*360])
-    translate([-board_dim[0]/2, -board_dim[1]/2])
-        hikey();
+module hikey_case(part) {
+    case(part,
+         comp_info=_comp_info,
+         min_z=3, max_z=9, board_h=board_dim[2],
+         holes_pos=_holes_pos, holes_d=hole_d)
+        _plate_2d();
+}
+
+*demo_board(board_dim)
+    hikey();
+
+demo_case(board_dim) {
+    hikey_case("bottom");
+    hikey();
+    hikey_case("top");
+}

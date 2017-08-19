@@ -13,7 +13,6 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 board_dim = [100, 60, 1.25];
-
 hole_d = 3;
 
 jack_dim = [12+2, 6.5, 5];
@@ -59,10 +58,10 @@ serial_pos = [44.5, 17, board_dim[2]];
 hdmi_dim = [11.25, 15, 6];
 hdmi_pos = [-.5, 20, board_dim[2]];
 
-sdslot_dim = [15, 14.75, 2];
+sdslot_dim = [14.75, 15, 2];
 sdslot_pos = [4, 1.75, board_dim[2]];
 
-sdcard_dim = [11, 15, 1];
+sdcard_dim = [15, 11, 1];
 sdcard_pos = [5, -.5, 2];
 
 cpu_dim = [19, 19, 1.25];

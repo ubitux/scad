@@ -13,6 +13,8 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 include <cubieboard_config.scad>
+use <../electronics.scad>
+use <../case.scad>
 use <../utils.scad>
 
 $fn = 30;
@@ -25,20 +27,28 @@ _c_metal = [.7, .7, .7];
 _c_black = [.3, .3, .3];
 _c_black_redish = [.35, .3, .3];
 
+_hole_pad = 3.5;
+_holes_pos = [for (y = [board_dim[1] - _hole_pad, _hole_pad],
+                   x = [board_dim[0] - _hole_pad,        23]) [x, y]];
+
+module _plate_2d() {
+    square([board_dim[0], board_dim[1]]);
+}
+
 module _plate() {
     ring_size = 1.5;
     color(_c_gray) {
         linear_extrude(height=board_dim[2]) {
             difference() {
-                square([board_dim[0], board_dim[1]]);
-                hole_positions()
+                _plate_2d();
+                hole_positions(_holes_pos)
                     circle(d=hole_d + ring_size, $fn=8);
             }
         }
     }
     color(_c_gold) {
         linear_extrude(height=board_dim[2]) {
-            hole_positions() {
+            hole_positions(_holes_pos) {
                 difference() {
                     circle(d=hole_d + ring_size, $fn=8);
                     circle(d=hole_d);
@@ -56,6 +66,7 @@ module _otg() {
     otg_polygon_pos = [[0, h], [w, h], [w, h-1.5], [w-.5, h-2],
                        [w-.5, lowest], [.5, lowest], [.5, h-2],
                        [0, h-1.5]];
+    translate([l, w]) rotate([0, 0, 180]) { // XXX
     color(_c_metal) {
         cube([l-7, w, h]);
         translate([l-7, 0, 0]) {
@@ -73,6 +84,7 @@ module _otg() {
     color(_c_black)
         translate([2, 1.5, 2])
             cube([6, w-3, 1]);
+    }
 }
 
 module _fel() {
@@ -85,11 +97,13 @@ module _fel() {
     bw = btn_dim[1];
     bh = btn_dim[2];
 
+    translate([l, w]) rotate([0, 0, 180]) { // XXX
     color("white")
         cube([l-bl, w, h]);
     color(_c_black)
         translate([l-bl, (w-bw)/2, (h-bh)/2])
             cube(btn_dim);
+    }
 }
 
 module _powerbtn() {
@@ -183,16 +197,6 @@ module _ir() {
                     square(.5);
 }
 
-module _sdslot() {
-    color(_c_metal)
-        cube(sdslot_dim);
-}
-
-module _sdcard() {
-    color(_c_black)
-        cube(sdcard_dim);
-}
-
 module _cpu() {
     color(_c_black)
         cube(cpu_dim);
@@ -227,53 +231,66 @@ module _cpurad() {
     }
 }
 
-module hole_positions() {
-    hole_pad = 3.5;
-    hole_x1 = board_dim[0] - hole_pad;
-    hole_x2 = 23;
-    hole_y1 = board_dim[1] - hole_pad;
-    hole_y2 = hole_pad;
-
-    for (y = [hole_y1, hole_y2])
-        for (x = [hole_x1, hole_x2])
-            translate([x, y])
-                children();
-}
-
-module jack_pos() {
-    for (pos = jack_pos_tab)
-        translate(pos)
-            children();
-}
-
-module gpio_pos() {
-    for (pos = gpio_pos_tab)
-        translate(pos)
-            children();
-}
+_comp_info = [
+    [gpio_dim,      "W", gpio_pos_tab[0],       true,  [ 0, 0, 1]],
+    [gpio_dim,      "W", gpio_pos_tab[1],       true,  [ 0, 0, 1]],
+    [ethernet_dim,  "E", ethernet_pos,          false, [-1, 0, 0]],
+    [jack_dim,      "E", jack_pos_tab[0],       false, [-1, 0, 0]],
+    [jack_dim,      "E", jack_pos_tab[1],       true,  [-1, 0, 0]],
+    [otg_dim,       "E", otg_pos,               false, [-1, 0, 0]],
+    [fel_dim,       "E", fel_pos,               true,  [-1, 0, 0]],
+    [usbx2_dim,     "S", usbx2_pos,             false, [-1, 0, 0]],
+    [sdslot_dim,    "S", sdslot_pos,            false, [ 0, 0, 0]],
+    [sdcard_dim,    "S", sdcard_pos,            false, [-1, 0, 0]],
+    [sata_data_dim, "W", sata_data_pos,         false, [ 0, 0, 1]],
+    [sata_5v_dim,   "W", sata_5v_pos,           false, [ 0, 0, 1]],
+    [power_dim,     "W", power_pos,             false, [-1, 0, 0]],
+    [powerbtn_dim,  "W", powerbtn_pos,          false, [-1, 0, 0]],
+    [ir_dim,        "W", ir_pos,                false, [ 0, 0, 0]],
+    [serial_dim,    "W", serial_pos,            false, [ 0, 0, 1]],
+    [hdmi_dim,      "W", hdmi_pos,              false, [-1, 0, 0]],
+    [cpu_dim,       "W", cpu_pos,               false, [ 0, 0, 0]],
+    [cpurad_dim,    "W", cpurad_pos,            false, [ 0, 0, 0]],
+];
 
 module cubieboard() {
     _plate();
-
-    translate(ethernet_pos)     ethernet(ethernet_dim, direction="E");
-    jack_pos()                  jack(jack_dim, direction="E");
-    translate(otg_pos)          _otg();
-    translate(fel_pos)          _fel();
-    gpio_pos()                  pin_header_pitch200(24, 2, dim=gpio_dim, flipped=true);
-    translate(usbx2_pos)        usbx2(dim=usbx2_dim, direction="S");
-    translate(sata_data_pos)    _sata_data();
-    translate(sata_5v_pos)      _sata_5v();
-    translate(power_pos)        _power();
-    translate(powerbtn_pos)     _powerbtn();
-    translate(ir_pos)           _ir();
-    translate(serial_pos)       pin_header_pitch254(4, 1, dim=serial_dim, direction="N");
-    translate(hdmi_pos)         hdmi(hdmi_dim);
-    translate(sdslot_pos)       _sdslot();
-    translate(sdcard_pos)       _sdcard();
-    translate(cpu_pos)          _cpu();
-    translate(cpurad_pos)       _cpurad();
+    set_components(_comp_info) {
+        pin_header_pitch200(dim=gpio_dim, n=24, m=2);
+        pin_header_pitch200(dim=gpio_dim, n=24, m=2);
+        ethernet(dim=ethernet_dim);
+        jack(dim=jack_dim);
+        jack(dim=jack_dim);
+        _otg();
+        _fel();
+        usbx2(dim=usbx2_dim);
+        sdslot(dim=sdslot_dim);
+        sdcard(dim=sdcard_dim);
+        _sata_data();
+        _sata_5v();
+        _power();
+        _powerbtn();
+        _ir();
+        pin_header_pitch254(dim=serial_dim, n=4, m=1);
+        hdmi(dim=hdmi_dim);
+        _cpu();
+        _cpurad();
+    }
 }
 
-rotate([0, 0, $t*360])
-    translate([-board_dim[0]/2, -board_dim[1]/2])
-        cubieboard();
+module cubieboard_case(part) {
+    case(part,
+         comp_info=_comp_info,
+         min_z=7, max_z=8, board_h=board_dim[2],
+         holes_pos=_holes_pos, holes_d=hole_d)
+        _plate_2d();
+}
+
+*demo_board(board_dim)
+    cubieboard();
+
+demo_case(board_dim) {
+    cubieboard_case("bottom");
+    cubieboard();
+    cubieboard_case("top");
+}

@@ -14,8 +14,8 @@
 
 use <../../utils/animate.scad>
 
-use <../../boards/bbb/bbb.scad>
-include <../../boards/bbb/bbb_config.scad>
+use <bbb.scad>
+include <bbb_config.scad>
 
 $fn = 30;
 

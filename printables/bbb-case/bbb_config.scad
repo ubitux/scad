@@ -20,6 +20,7 @@
 function in2mm(v) = 2.54 * v / 100;
 
 board_dim = [in2mm(3400), in2mm(2150), 1.75];
+
 hole_d = in2mm(125);
 
 ledgesz = in2mm(250);
@@ -38,12 +39,8 @@ gpio_pos_tab = [[18,                0.5, board_dim[2]],
 usb_dim = [14, 14.5, 8];
 usb_pos = [72.5, in2mm(405) - .6, board_dim[2]];
 
-button_dim = [4, 3, 2];
-button_pos_tab = [
-    [5.5, 40, board_dim[2]],
-    [5.5, 40+9.5, board_dim[2]],
-    [74, 41.5, board_dim[2]],
-];
+button_base_dim = [4, 3, 1.5];
+button_pusher_dim = [2, 1.5, 0.5];
 
 miniusb_dim = [7, in2mm(1880-1575), 4];
 miniusb_pos = [-in2mm(25), in2mm(1575), -miniusb_dim[2]];
